@@ -5,16 +5,15 @@
 #include "token.h"
 #include "semantic.h"
 
-// ================= LEXER =================
+// LEXER
 Token getNextToken();
 
 // token atual
 Token currentToken;
 
-// ================= UTIL =================
-
+// UTIL
 void syntaxError(const char *msg) {
-    printf("\n===== ERRO SINTATICO =====\n");
+    printf("\nERRO SINTATICO\n");
     printf("%s\n", msg);
     printf("Token encontrado: %s\n", currentToken.lexeme);
     exit(1);
@@ -25,7 +24,7 @@ void advance() {
 
     // ERRO LEXICO
     if (currentToken.type == TOK_ERROR) {
-        printf("\n===== ERRO LEXICO =====\n");
+        printf("\nERRO LEXICO\n");
         printf("Lexema invalido: %s\n", currentToken.lexeme);
         exit(1);
     }
@@ -39,7 +38,7 @@ void match(TokenType expected) {
     }
 }
 
-// ================= PROTOTIPOS =================
+// PROTOTIPOS
 
 void programa();
 void listaDeclaracoes();
@@ -66,13 +65,13 @@ void fator();
 void opRelacional();
 void literal();
 
-// ================= PARSER PRINCIPAL =================
+// PROGRAMA
 
 void parseProgram() {
 
     semBeginProgram();
 
-    currentToken = getNextToken();   // 🔥 CORREÇÃO PRINCIPAL
+    currentToken = getNextToken();
 
     if (currentToken.type == TOK_EOF) {
         syntaxError("programa vazio");
@@ -86,12 +85,11 @@ void parseProgram() {
 
     semEndProgram();
 
-    printf("\nAnalise sintatica e semantica concluida com sucesso!\n");
+    printf("\nAnalise sintatica concluida com sucesso!\n");
 }
 
-// ================= GRAMATICA =================
+//GRAMATICA
 
-// programa ::= listaDeclaracoes
 void programa() {
     listaDeclaracoes();
 }
@@ -130,16 +128,13 @@ void declaracao() {
 
 // declaracao_variavel ::= tipo id = expressao ;
 void declaracaoVariavel() {
-
     TokenType tipoVar = currentToken.type;
 
     tipo();
-
     char nome[MAX_LEXEMA];
     strcpy(nome, currentToken.lexeme);
 
     match(TOK_ID);
-
     semDeclareVariable(nome, tipoVar);
 
     match(TOK_ASSIGN);
@@ -153,11 +148,25 @@ void declaracaoVariavel() {
 void tipo() {
     switch (currentToken.type) {
 
-        case TOK_INTEGER: match(TOK_INTEGER); break;
-        case TOK_REAL:    match(TOK_REAL); break;
-        case TOK_CHAR:    match(TOK_CHAR); break;
-        case TOK_LITERAL: match(TOK_LITERAL); break;
-        case TOK_BOOL:    match(TOK_BOOL); break;
+        case TOK_INTEGER:
+            match(TOK_INTEGER);
+            break;
+
+        case TOK_REAL:
+            match(TOK_REAL);
+            break;
+
+        case TOK_CHAR:
+            match(TOK_CHAR);
+            break;
+
+        case TOK_LITERAL:
+            match(TOK_LITERAL);
+            break;
+
+        case TOK_BOOL:
+            match(TOK_BOOL);
+            break;
 
         default:
             syntaxError("tipo invalido");
@@ -313,10 +322,11 @@ void expressaoAritmetica() {
         currentToken.type == TOK_PLUS ||
         currentToken.type == TOK_MINUS
     ) {
-        if (currentToken.type == TOK_PLUS)
+        if (currentToken.type == TOK_PLUS) {
             match(TOK_PLUS);
-        else
+        } else {
             match(TOK_MINUS);
+        }
 
         termo();
     }
@@ -331,10 +341,11 @@ void termo() {
         currentToken.type == TOK_MULT ||
         currentToken.type == TOK_DIV
     ) {
-        if (currentToken.type == TOK_MULT)
+        if (currentToken.type == TOK_MULT) {
             match(TOK_MULT);
-        else
+        } else {
             match(TOK_DIV);
+        }
 
         fator();
     }
@@ -374,12 +385,29 @@ void opRelacional() {
 
     switch (currentToken.type) {
 
-        case TOK_GT:  match(TOK_GT); break;
-        case TOK_GTE: match(TOK_GTE); break;
-        case TOK_LT:  match(TOK_LT); break;
-        case TOK_LTE: match(TOK_LTE); break;
-        case TOK_EQ:  match(TOK_EQ); break;
-        case TOK_NE:  match(TOK_NE); break;
+        case TOK_GT:
+            match(TOK_GT);
+            break;
+
+        case TOK_GTE:
+            match(TOK_GTE);
+            break;
+
+        case TOK_LT:
+            match(TOK_LT);
+            break;
+
+        case TOK_LTE:
+            match(TOK_LTE);
+            break;
+
+        case TOK_EQ:
+            match(TOK_EQ);
+            break;
+
+        case TOK_NE:
+            match(TOK_NE);
+            break;
 
         default:
             syntaxError("operador relacional invalido");
@@ -391,12 +419,29 @@ void literal() {
 
     switch (currentToken.type) {
 
-        case TOK_INT_LITERAL: match(TOK_INT_LITERAL); break;
-        case TOK_REAL_LITERAL: match(TOK_REAL_LITERAL); break;
-        case TOK_CHAR_LITERAL: match(TOK_CHAR_LITERAL); break;
-        case TOK_STRING_LITERAL: match(TOK_STRING_LITERAL); break;
-        case TOK_TRUE: match(TOK_TRUE); break;
-        case TOK_FALSE: match(TOK_FALSE); break;
+        case TOK_INT_LITERAL:
+            match(TOK_INT_LITERAL);
+            break;
+
+        case TOK_REAL_LITERAL:
+            match(TOK_REAL_LITERAL);
+            break;
+
+        case TOK_CHAR_LITERAL:
+            match(TOK_CHAR_LITERAL);
+            break;
+
+        case TOK_STRING_LITERAL:
+            match(TOK_STRING_LITERAL);
+            break;
+
+        case TOK_TRUE:
+            match(TOK_TRUE);
+            break;
+
+        case TOK_FALSE:
+            match(TOK_FALSE);
+            break;
 
         default:
             syntaxError("literal invalido");
